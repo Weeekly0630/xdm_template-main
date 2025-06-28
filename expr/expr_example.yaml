@@ -1,0 +1,212 @@
+# XDM Element Examples
+elements:
+  # 1. 基础元素
+  # 1.1 简单字符串值 - 不需要指定类型
+  string_value: "hello world"
+
+  # 1.2 简单列表值 - 也可以直接使用
+  string_array: ["prefix-", "middle-", "suffix"]
+
+  # 1.3 XPath表达式 - 使用参数列表格式
+  simple_xpath:
+    type: "xpath"
+    args: ["a/b/c"]
+
+  # 1.4 复杂XPath表达式 - 可以混合字符串和元素
+  complex_xpath:
+    type: "xpath"
+    args: ["parent", "/", "child", "[", "@id", "=", "123", "]"]
+
+  # 2. 函数调用
+  # 2.1 简单函数调用 - 第一个参数是函数名
+  simple_function:
+    type: "function"
+    args: ["node:current"]
+
+  # 2.2 带参数的函数
+  function_with_args:
+    type: "function"
+    args: ["node:value", "parent/node"]
+
+  # 2.3 节点函数示例
+  node_functions:
+    type: "expression"
+    operator: "and"
+    args: [
+      {
+        type: "function",
+        args: ["node:exists", "CanControllerRef"]
+      },
+      {
+        type: "function",
+        args: ["node:value", "."]
+      }
+    ]
+
+  # 2.4 文本函数示例
+  text_function:
+    type: "function"
+    args: [
+      "text:match",
+      {
+        type: "function",
+        args: ["node:value", "."]
+      },
+      "^[_a-zA-Z]+[_0-9a-zA-Z]*$"
+    ]
+
+  # 2.5 数值函数示例
+  numeric_function:
+    type: "expression"
+    operator: "less_than_or_equal"
+    args: [
+      {
+        type: "function",
+        args: ["num:i", {
+          type: "function",
+          args: ["count", {
+            type: "xpath",
+            args: [
+              {
+                type: "function",
+                args: ["node:current"]
+              },
+              "/*"
+            ]
+          }]
+        }]
+      },
+      "255"
+    ]
+
+  # 2.6 ECU函数示例
+  ecu_function:
+    type: "function"
+    args: ["ecu:get", "Can.CanConfigSet.CanFdEnable"]
+
+  # 3. 表达式
+  # 3.1 简单比较表达式 - 使用参数列表格式
+  compare_xpath:
+    type: "expression"
+    operator: "equal"
+    args: [
+      {
+        type: "xpath",
+        args: ["a/b/c"]
+      },
+      {
+        type: "xpath",
+        args: ["x/y/z"]
+      }
+    ]
+
+  # 3.2 函数比较表达式
+  compare_function:
+    type: "expression"
+    operator: "equal"
+    args: [
+      {
+        type: "function",
+        args: ["node:current"]
+      },
+      {
+        type: "xpath",
+        args: ["target/node"]
+      }
+    ]
+
+  # 3.3 逻辑与运算 - 可以有多个参数
+  logical_and:
+    type: "expression"
+    operator: "and"
+    args: [
+      {
+        type: "expression",
+        operator: "equal",
+        args: [
+          {
+            type: "xpath",
+            args: ["a"]
+          },
+          {
+            type: "xpath",
+            args: ["b"]
+          }
+        ]
+      },
+      {
+        type: "expression",
+        operator: "equal",
+        args: [
+          {
+            type: "xpath",
+            args: ["c"]
+          },
+          {
+            type: "xpath",
+            args: ["d"]
+          }
+        ]
+      }
+    ]
+
+  # 3.4 逻辑非运算 - 单参数表达式
+  logical_not:
+    type: "expression"
+    operator: "not"
+    args: [
+      {
+        type: "xpath",
+        args: ["condition"]
+      }
+    ]
+
+  # 3.5 三个条件的与运算
+  triple_and:
+    type: "expression"
+    operator: "and"
+    args: [
+      {
+        type: "xpath",
+        args: ["condition1"]
+      },
+      {
+        type: "xpath",
+        args: ["condition2"]
+      },
+      {
+        type: "xpath",
+        args: ["condition3"]
+      }
+    ]
+
+  # 3.6 嵌套表达式
+  nested_expression:
+    type: "expression"
+    operator: "and"
+    args: [
+      {
+        type: "expression",
+        operator: "equal",
+        args: [
+          {
+            type: "xpath",
+            args: ["a"]
+          },
+          {
+            type: "xpath",
+            args: ["b"]
+          }
+        ]
+      },
+      {
+        type: "expression",
+        operator: "not",
+        args: [
+          {
+            type: "xpath",
+            args: ["c"]
+          }
+        ]
+      }
+    ]

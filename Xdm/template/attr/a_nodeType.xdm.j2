@@ -1,0 +1,146 @@
+{%- import "attr/common.j2" as Common -%}
+
+{### 
+    a:a node
+###}
+{# IMPLEMENTATIONCONFIGCLASS #}
+{%- macro implementation_node(variantConfig) -%}
+{%- if variantConfig is not none and variantConfig|length -%}
+<a:a name="IMPLEMENTATIONCONFIGCLASS" type="IMPLEMENTATIONCONFIGCLASS">
+    {% for cfg in variantConfig -%}
+    <icc:v {{cfg.classType}}class="{{cfg.className}}">{{cfg.name}}</icc:v>
+    {%- endfor %}
+</a:a>
+{%- endif -%}
+{%- endmacro -%}
+
+{# INVALID #}
+{%- macro invalid_node(invalidConfig) -%}
+{%- if invalidConfig is not none -%}
+<a:a {{- Common.set_attr("name", "INVALID") -}}
+    {%- if (invalidConfig.xpath|default([]))|length > 0 and (invalidConfig.range|default([]))|length > 0 -%}
+    {{- Common.set_attr("type", "Multi") -}} >
+    <mt:xpath>
+        {%- for tst in invalidConfig.xpath -%}
+        <a:tst  {{- Common.set_attr("expr", tst.expr) -}}
+                {{- Common.set_attr("true", tst.true_text) -}}
+                {{- Common.set_attr("false", tst.false_text) -}} />
+        {%- endfor -%}
+    </mt:xpath>
+    <mt:range>
+        {%- for tst in invalidConfig.range -%}
+        <a:tst  {{- Common.set_attr("expr", tst.expr) -}}
+                {{- Common.set_attr("true", tst.true_text) -}}
+                {{- Common.set_attr("false", tst.false_text) -}} />
+        {%- endfor -%}
+    </mt:range>
+    {%- elif (invalidConfig.xpath|default([]))|length > 0 -%}
+    {{- Common.set_attr("type", "XPath") -}} >
+        {%- for tst in invalidConfig.xpath -%}
+    <a:tst  {{- Common.set_attr("expr", tst.expr) -}}
+            {{- Common.set_attr("true", tst.true_text) -}}
+            {{- Common.set_attr("false", tst.false_text) -}} />
+        {%- endfor -%}
+    {%- elif (invalidConfig.range|default([]))|length > 0 -%}
+    {{- Common.set_attr("type", "Range") -}} >
+        {%- for tst in invalidConfig.range %}
+    <a:tst  {{- Common.set_attr("expr", tst.expr) -}}
+            {{- Common.set_attr("true", tst.true_text) -}}
+            {{- Common.set_attr("false", tst.false_text) -}} />
+        {%- endfor -%}
+    {%- endif -%}
+</a:a>
+{%- endif -%}
+{%- endmacro -%}
+
+{# OPTIONAL Static Definition #}
+{%- macro __optional_node(value, prefix) -%}
+{%- if value is not none -%}
+    {%- if value -%}
+    <a:{{prefix}}a name="OPTIONAL" value="true" />
+    {%- else -%}
+    {%- endif -%}
+{%- endif -%}
+{%- endmacro -%}
+
+{# OPTIONAL #}
+{%- macro optional_node(value) -%}
+{{ __optional_node(value, "")}}
+{%- endmacro -%}
+
+{# ENABLE Static Definition #}
+{%- macro __enable_node(value, prefix) -%}
+{%- if value is not none -%}
+    {%- if value -%}
+    {%- else -%}
+    <a:{{prefix}}a name="ENABLE" value="false" />
+    {%- endif -%}
+{%- endif -%}
+{%- endmacro -%}
+
+{# ENABLE #}
+{%- macro enable_node(value) -%}
+{{__enable_node(value, "")}}
+{%- endmacro -%}
+
+{# EDITABLE #}
+{%- macro __editable_node(type, expr, value, prefix) -%}
+{%- if type == "XPath" -%}
+<a:{{prefix}}a name="EDITABLE" type="XPath" expr="{{expr}}"/>
+{%- else -%}
+<a:{{prefix}}a name="EDITABLE" value="{{value}}"/>
+{%- endif -%}
+{%- endmacro- %}
+
+{%- macro editable_node(type, expr, value) -%}
+{{__editable_node(type, expr, value, "")}}
+{%- endmacro- %}
+
+{# READONLY #}
+{%- macro __readonly_node(value, prefix) -%}
+{%- if value is not none -%}
+    {%- if value -%}
+    <a:{{prefix}}a name="READONLY" value="true"/>
+    {%- else -%}
+    {%- endif -%}
+{%- endif -%}
+{%- endmacro- %}
+
+{%- macro readonly_node(value) -%}
+{{__readonly_node(value, "")}}
+{%- endmacro- %}
+
+{# VISIBLE #}
+
+
+
+{# REQUIRES-INDEX #}
+{%- macro __require_index_node(value, prefix) -%}
+{%- if value is not none -%}
+    {%- if value -%}
+    <a:{{prefix}}a name="REQUIRES-INDEX" value="true"/>
+    {%- else -%}
+    {%- endif -%}
+{%- endif -%}
+{%- endmacro -%}
+
+{%- macro require_index_node(value) -%}
+{{__require_index_node(value, "")}}
+{%- endmacro -%}
+
+{### 
+    a:da node
+###}
+{# OPTIONAL #}
+{%- macro optional_dnode(value) -%}
+{{__optional_node(value, "d")}}
+{%- endmacro -%}
+
+{# ENABLE #}
+{%- macro enable_dnode(value) -%}
+{{__enable_node(value, "d")}}
+{%- endmacro -%}
+
+{%- macro editable_dnode(type, expr, value) -%}
+{{__editable_node(type, expr, value, "d")}}
+{%- endmacro- %}

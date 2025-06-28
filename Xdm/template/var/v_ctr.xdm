@@ -1,0 +1,17 @@
+{%- extends "base/base.j2" -%}
+
+{%- block content -%}
+<v:ctr name="{{ name }}" type="{{ type }}">
+    <a:a name="DESC">
+        <a:v><![CDATA[EN:{{ HtmlFormatter.format_content(description) }}]]></a:v>
+    </a:a>
+    {{- AttrNodeType.implementation_node(variantConfig) -}}
+    {{- AttrNodeType.invalid_node(invalidConfig) -}}
+    {{- AttrNodeType.optional_node(optional) -}}
+    {{- AttrNodeType.enable_dnode(enable) -}}
+    {{- AttrNodeType.require_index_node(require_index) -}}
+    <a:a name="UUID" value="{{ UUID }}" />
+
+    {{- children_text }} 
+</v:ctr>
+{%- endblock -%}

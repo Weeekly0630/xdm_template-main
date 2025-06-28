@@ -1,0 +1,56 @@
+<!-- Container1 -->
+<v:ctr name="Container1" type="IDENTIFIABLE">
+    <a:a name="DESC">
+        <a:v><![CDATA[EN:<html><p>This is a basic AUTOSAR V-CTR configuration template.</p></html>]]></a:v>
+    </a:a>
+    <a:a name="IMPLEMENTATIONCONFIGCLASS" type="IMPLEMENTATIONCONFIGCLASS">
+        <icc:v class="PreCompile">VariantPreCompile</icc:v>
+    </a:a>
+    <a:a name="INVALID" type="Multi">
+        <mt:xpath>
+            <a:tst expr="Var1" true="a" false="a"/>
+        </mt:xpath>
+        <mt:range>
+            <a:tst expr="b"/>
+        </mt:range>
+    </a:a>
+    <a:da name="ENABLE" type="XPath">
+        <a:tst expr="None"/>
+    </a:da>
+    <a:a name="EDITABLE" type="XPath">
+        <a:tst expr="a"/>
+    </a:a>
+    <a:a name="VISIBLE" type="XPath">
+        <a:tst expr="a"/>
+    </a:a>
+    <a:a name="UUID" value="" />
+    <!-- Var1 -->
+    <v:ctr name="Var1" type="">
+        <a:a name="DESC">
+            <a:v><![CDATA[EN:<html><p>This is a basic AUTOSAR V-CTR configuration template.</p></html>]]></a:v>
+        </a:a>
+        <a:a name="IMPLEMENTATIONCONFIGCLASS" type="IMPLEMENTATIONCONFIGCLASS">
+            <icc:v class="PreCompile">VariantPreCompile</icc:v>
+        </a:a>
+        <a:a name="INVALID" type="Multi">
+            <mt:xpath>
+                <a:tst expr="a" true="a" false="a"/>
+            </mt:xpath>
+            <mt:range>
+                <a:tst expr="b"/>
+            </mt:range>
+        </a:a>
+        <a:a name="OPTIONAL" value="true" />
+        <a:da name="ENABLE" type="XPath">
+            <a:tst expr="a"/>
+        </a:da>
+        <a:a name="REQUIRES-INDEX" value="true"/>
+        <a:a name="EDITABLE" type="XPath">
+            <a:tst expr="a"/>
+        </a:a>
+        <a:a name="VISIBLE" type="XPath">
+            <a:tst expr="a"/>
+        </a:a>
+        <a:a name="UUID" value="" />
+    </v:ctr>
+</v:ctr>

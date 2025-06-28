@@ -1,0 +1,19 @@
+<v:ctr name="" type="">
+    <a:a name="DESC">
+        <a:v><![CDATA[EN:<html></html>]]></a:v>
+    </a:a>
+    <a:a name="IMPLEMENTATIONCONFIGCLASS" type="IMPLEMENTATIONCONFIGCLASS">
+        <icc:v class="PreCompile">VariantPreCompile</icc:v>
+    </a:a>
+    <a:a name="INVALID" type="Multi">
+        <mt:xpath>
+            <a:tst expr="a" true="a" false="a"/>
+        </mt:xpath>
+        <mt:range>
+            <a:tst expr="b"/>
+        </mt:range>
+    </a:a>
+    <a:a name="OPTIONAL" value="true" />
+    <a:da name="ENABLE" value="false" />
+    <a:a name="UUID" value="" />
+</v:ctr>

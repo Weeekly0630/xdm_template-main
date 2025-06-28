@@ -1,0 +1,28 @@
+TEMPLATE_NAME: "var/v_ctr"  # Type of the template, cannot be changed
+CHILDREN:
+  - ""
+
+# Basic AUTOSAR V-CTR configuration template
+name: ""  # Name of the container
+type: ""  # Type of the container, e.g., "IDENTIFIABLE"
+UUID: ""  # UUID for the container
+
+variantConfig:
+  - classType: "" # Class type for the variant configuration
+    className: "PreCompile"
+    name: "VariantPreCompile"
+
+invalidConfig:
+  xpath: 
+    - expr: a
+      true_text: a
+      false_text: a
+  
+  range:
+    - expr: b
+      true: b
+      false: b
+
+optional: true
+enable: false 
+require_index: true

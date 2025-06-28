@@ -1,0 +1,57 @@
+TEMPLATE_NAME: "var/v_ctr.xdm" # Type of the template, cannot be changed
+CHILDREN:
+  - "./vars/*"
+
+# Basic AUTOSAR V-CTR configuration template
+name: "Container1" # Name of the container
+type: "IDENTIFIABLE" # Type of the container, e.g., "IDENTIFIABLE"
+UUID: "" # UUID for the container
+description: "This is a basic AUTOSAR V-CTR configuration template." # Description of the container
+
+variantConfig:
+  - classType: "" # Class type for the variant configuration
+    className: "PreCompile"
+    name: "VariantPreCompile"
+
+invalidConfig:
+  xpath:
+    - expr: 
+        type: "function"
+        args:
+          - "user:get_rel_xpath"
+          - "/vars/var1.yaml"     # 目标节点的绝对路径
+      true_text: a
+      false_text: a
+
+  range:
+    - expr: b
+      true: b
+      false: b
+
+optional: 
+require_index: 
+enableConfig: 
+  type: XPath
+  tsts:
+    - expr: 
+      true_text: 
+      false_text: 
+  value:
+
+editableConfig:
+  type: XPath
+  tsts:
+    - expr: a
+      true_text: 
+      false_text: 
+  value:
+
+visibleConfig:
+  type: XPath
+  tsts:
+    - expr: a
+      true_text:
+      false_text:
+  value:
+
+tab:

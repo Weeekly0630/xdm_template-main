@@ -1,0 +1,44 @@
+# XDM Element Examples - 使用'/'自动连接的XPath
+elements:
+  # 1. XPath表达式 - 参数会自动用'/'连接
+  simple_xpath:
+    type: "xpath"
+    args: ["a", "b", "c"]  # 输出: a/b/c
+
+  # 2. 带属性的XPath
+  xpath_with_attr:
+    type: "xpath"
+    args: ["node", "@id=123"]  # 输出: node/@id=123
+
+  # 3. 带函数的XPath
+  xpath_with_function:
+    type: "xpath"
+    args: [
+      {
+        type: "function",
+        args: ["node:current"]
+      },
+      "child",
+      "grandchild"
+    ]  # 输出: node:current()/child/grandchild
+
+  # 4. 复杂XPath表达式
+  complex_xpath:
+    type: "expression"
+    operator: "equal"
+    args: [
+      {
+        type: "xpath",
+        args: ["parent", "child[@type='container']", "item"]
+      },
+      {
+        type: "xpath",
+        args: [
+          {
+            type: "function",
+            args: ["node:ref", "target"]
+          },
+          "value"
+        ]
+      }
+    ]  # 输出: (parent/child[@type='container']/item = node:ref(target)/value)

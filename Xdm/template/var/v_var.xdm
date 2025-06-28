@@ -1,0 +1,26 @@
+{%- extends "base/base.j2" -%}
+
+{%- block content -%}
+<!-- @implements {{ name }}_Object -->
+<v:var name="{{ name }}" type="{{ type }}">
+    <a:a name="LABEL" value="{{ label }}" />
+    <a:a name="SYMBOLICNAMEVALUE" value="{{ false }}" />
+    <a:a name="UUID" value="{{ UUID }}" />
+    <a:a name="DESC">
+        <a:v>
+            <![CDATA[EN:{{ HtmlFormatter.format_content(htmlDescription) }}]]>
+        </a:v>
+    </a:a>
+    <a:a name="IMPLEMENTATIONCONFIGCLASS" type="IMPLEMENTATIONCONFIGCLASS">
+        <icc:v vclass="Link">VariantLinkTime</icc:v>
+        <icc:v vclass="PreCompile">VariantPreCompile</icc:v>
+        <icc:v vclass="PostBuild">VariantPostBuild</icc:v>
+    </a:a>
+    <a:da name="DEFAULT" value="VariantPreCompile" />
+    <a:da name="RANGE">
+        <a:v>VariantLinkTime</a:v>
+        <a:v>VariantPreCompile</a:v>
+        <a:v>VariantPostBuild</a:v>
+    </a:da>
+</v:var>
+{%- endblock -%}

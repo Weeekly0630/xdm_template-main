@@ -1,0 +1,8 @@
+TEMPLATE_NAME: "mcal_base.xdm"  # Type of the template, cannot be changed!
+CHILDREN:
+  - "chc/*"  # Include all CHC modules
+
+# Basic AUTOSAR MCAL configuration template
+# Change these values to match your project
+name: ""  # Name of the AR-PACKAGE
+UUID: ""  # UUID for the package

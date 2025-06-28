@@ -1,0 +1,39 @@
+# Configuration for function finder
+# List of input files to process
+input_files:
+  - U:\Users\Enlink\Documents\参考文档\AUTOSAR_SampleProject_S32K144-master\plugins\Adc_TS_T40D2M10I1R0\config\Adc.xdm
+  - U:\Users\Enlink\Documents\参考文档\AUTOSAR_SampleProject_S32K144-master\plugins\Base_TS_T40D2M10I1R0\config\Base.xdm
+  - U:\Users\Enlink\Documents\参考文档\AUTOSAR_SampleProject_S32K144-master\plugins\Can_TS_T40D2M10I1R0\config\Can.xdm
+  - U:\Users\Enlink\Documents\参考文档\AUTOSAR_SampleProject_S32K144-master\plugins\Cdd_Ipc\config\CDD_Ipc.xdm
+  - U:\Users\Enlink\Documents\参考文档\AUTOSAR_SampleProject_S32K144-master\plugins\Crcu_TS_T40D2M10I1R0\config\Crcu.xdm
+  - U:\Users\Enlink\Documents\参考文档\AUTOSAR_SampleProject_S32K144-master\plugins\Dem_TS_T40D2M10I1R0\config\Dem.xdm
+  - U:\Users\Enlink\Documents\参考文档\AUTOSAR_SampleProject_S32K144-master\plugins\Dio_TS_T40D2M10I1R0\config\Dio.xdm
+  - U:\Users\Enlink\Documents\参考文档\AUTOSAR_SampleProject_S32K144-master\plugins\EcuC_TS_T40D2M10I1R0\config\EcuC.xdm
+  - U:\Users\Enlink\Documents\参考文档\AUTOSAR_SampleProject_S32K144-master\plugins\EcuM_TS_T40D2M10I1R0\config\EcuM.xdm
+  - U:\Users\Enlink\Documents\参考文档\AUTOSAR_SampleProject_S32K144-master\plugins\Eep_TS_T40D2M10I1R0\config\Eep.xdm
+  - U:\Users\Enlink\Documents\参考文档\AUTOSAR_SampleProject_S32K144-master\plugins\Eth_TS_T40D2M10I1R0\config\Eth.xdm
+  - U:\Users\Enlink\Documents\参考文档\AUTOSAR_SampleProject_S32K144-master\plugins\Fee_TS_T40D2M10I1R0\config\Fee.xdm
+  - U:\Users\Enlink\Documents\参考文档\AUTOSAR_SampleProject_S32K144-master\plugins\Fls_TS_T40D2M10I1R0\config\Fls.xdm
+  - U:\Users\Enlink\Documents\参考文档\AUTOSAR_SampleProject_S32K144-master\plugins\Gpt_TS_T40D2M10I1R0\config\Gpt.xdm
+  - U:\Users\Enlink\Documents\参考文档\AUTOSAR_SampleProject_S32K144-master\plugins\I2c_TS_T40D2M10I1R0\config\I2c.xdm
+  - U:\Users\Enlink\Documents\参考文档\AUTOSAR_SampleProject_S32K144-master\plugins\Icu_TS_T40D2M10I1R0\config\Icu.xdm
+  - U:\Users\Enlink\Documents\参考文档\AUTOSAR_SampleProject_S32K144-master\plugins\Lin_TS_T40D2M10I1R0\config\Lin.xdm
+  - U:\Users\Enlink\Documents\参考文档\AUTOSAR_SampleProject_S32K144-master\plugins\Mcem_TS_T40D2M10I1R0\config\Mcem.xdm
+  - U:\Users\Enlink\Documents\参考文档\AUTOSAR_SampleProject_S32K144-master\plugins\Mcl_TS_T40D2M10I1R0\config\Mcl.xdm
+  - U:\Users\Enlink\Documents\参考文档\AUTOSAR_SampleProject_S32K144-master\plugins\Mcu_TS_T40D2M10I1R0\config\Mcu.xdm
+  - U:\Users\Enlink\Documents\参考文档\AUTOSAR_SampleProject_S32K144-master\plugins\Ocu_TS_T40D2M10I1R0\config\Ocu.xdm
+  - U:\Users\Enlink\Documents\参考文档\AUTOSAR_SampleProject_S32K144-master\plugins\Os_TS_T40D2M10I1R0\config\Os.xdm
+  - U:\Users\Enlink\Documents\参考文档\AUTOSAR_SampleProject_S32K144-master\plugins\Port_TS_T40D2M10I1R0\config\Port.xdm
+  - U:\Users\Enlink\Documents\参考文档\AUTOSAR_SampleProject_S32K144-master\plugins\Pwm_TS_T40D2M10I1R0\config\Pwm.xdm
+  - U:\Users\Enlink\Documents\参考文档\AUTOSAR_SampleProject_S32K144-master\plugins\Resource_TS_T40D2M10I1R0\config\Resource.xdm
+  - U:\Users\Enlink\Documents\参考文档\AUTOSAR_SampleProject_S32K144-master\plugins\Spi_TS_T40D2M10I1R0\config\Spi.xdm
+  - U:\Users\Enlink\Documents\参考文档\AUTOSAR_SampleProject_S32K144-master\plugins\Wdg_TS_T40D2M10I1R0\config\Wdg.xdm
+
+# Output options
+output:
+  # If true, show which functions came from which files
+  show_file_sources: true
+  # If true, save results to output file
+  save_to_file: false
+  # Output file path (only used if save_to_file is true)
+  output_file: "function_list.txt"

@@ -1,0 +1,52 @@
+TEMPLATE_NAME: "var/v_ctr.xdm" # Type of the template, cannot be changed
+CHILDREN:
+  - ""
+
+# Basic AUTOSAR V-CTR configuration template
+name: "" # Name of the container
+type: "" # Type of the container, e.g., "IDENTIFIABLE"
+UUID: "" # UUID for the container
+description: ""
+variantConfig:
+  - classType: "" # Class type for the variant configuration
+    className:
+    name: 
+
+invalidConfig:
+  xpath:
+    - expr: 
+      true_text: 
+      false_text: 
+
+  range:
+    - expr: 
+      true_text: 
+      false_text: 
+
+optional: true
+require_index: true
+enableConfig: 
+  type: 
+  tsts:
+    - expr:
+      true_text: 
+      false_text: 
+  value:
+
+editableConfig:
+  type: 
+  tsts:
+    - expr:
+      true_text: 
+      false_text: 
+  value:
+
+visibleConfig:
+  type: 
+  tsts:
+    - expr:
+      true_text:
+      false_text:
+  value:
+
+tab:

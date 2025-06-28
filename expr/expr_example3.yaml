@@ -1,0 +1,41 @@
+# XDM Element Examples - 可选参数函数调用
+elements:
+  # 1. node:fallback 函数 - 带可选的默认值
+  fallback_without_default:
+    type: "function"
+    args: ["node:fallback", "path/to/node"]  # 只提供路径
+
+  fallback_with_default:
+    type: "function"
+    args: ["node:fallback", "path/to/node", "default-value"]  # 提供路径和默认值
+
+  # 2. text:match 函数 - 带可选的flags
+  text_match_simple:
+    type: "function"
+    args: ["text:match", "some-text", "^[a-z]+$"]  # 基本匹配
+
+  text_match_with_flags:
+    type: "function"
+    args: ["text:match", "some-text", "^[a-z]+$", "i"]  # 带flags的匹配
+
+  # 3. 复杂表达式中的可选参数
+  complex_expression:
+    type: "expression"
+    operator: "and"
+    args: [
+      {
+        type: "function",
+        args: ["node:fallback", "config/value", "true"]  # 带默认值
+      },
+      {
+        type: "function",
+        args: ["text:match", 
+          {
+            type: "function",
+            args: ["node:value", "name"]  # 获取节点值
+          },
+          "^[A-Z][a-z]*$",
+          "i"  # 不区分大小写
+        ]
+      }
+    ]
