@@ -1,0 +1,7 @@
+TEMPLATE_PATH: "templates/child2.tmpl"
+CHILDREN_PATH: []  # No children - this is a leaf node
+data:
+  name: "child2"
+  description: "Child 2 configuration"
+  type: "sub2"
+  is_leaf: true

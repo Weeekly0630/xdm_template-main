@@ -1,0 +1,6 @@
+TEMPLATE_PATH: "templates/child1.tmpl"
+CHILDREN_PATH:   # Points to files in sub2 directory
+data:
+  name: "child1"
+  description: "Child 1 configuration"
+  type: "sub1"

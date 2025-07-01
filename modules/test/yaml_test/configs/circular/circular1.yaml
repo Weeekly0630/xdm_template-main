@@ -1,0 +1,5 @@
+TEMPLATE_PATH: "templates/circular1.tmpl"
+CHILDREN_PATH: "circular2.yaml"
+data:
+  name: "circular1"
+  description: "Node with circular reference"

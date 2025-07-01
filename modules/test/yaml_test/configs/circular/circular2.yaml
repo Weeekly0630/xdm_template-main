@@ -1,0 +1,5 @@
+TEMPLATE_PATH: "templates/circular2.tmpl"
+CHILDREN_PATH: "./circular1.yaml"  # Creates circular reference with circular1.yaml
+data:
+  name: "circular2"
+  description: "Node completing circular reference"

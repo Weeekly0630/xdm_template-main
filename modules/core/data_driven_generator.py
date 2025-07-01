@@ -1,7 +1,7 @@
 """Data-driven generator module for Jinja Template"""
 
 from enum import Enum
-from typing import Optional, List, Dict, Any
+from typing import Optional, List, Dict, Any, cast
 from dataclasses import dataclass
 from . import (
     GeneratorError,
@@ -65,7 +65,7 @@ class DataDrivenGenerator:
 
     def yaml_data_init(self, data_config: Dict[str, Any]) -> None:
         """Initialize the YAML data handler"""
-        self.data_handler = YamlDataTreeHandler(data_config)
+        self.data_handler = cast(DataHandler, YamlDataTreeHandler(data_config))
         validate_data_handler(self.data_handler)
 
     def template_init(self, template_type: TemplateType, template_config: Dict[str, Any]) -> None:

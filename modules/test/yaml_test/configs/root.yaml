@@ -1,0 +1,7 @@
+TEMPLATE_PATH: "templates/root.tmpl"
+CHILDREN_PATH:
+  - "sub1/*.yaml"
+  - "sub2/*.yaml"
+data:
+  name: "root"
+  description: "Root configuration"
