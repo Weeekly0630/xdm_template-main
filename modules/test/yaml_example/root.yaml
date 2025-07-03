@@ -1,0 +1,6 @@
+TEMPLATE_PATH: "templates/root.tmpl"
+CHILDREN_PATH: 
+  - "*/**/*.yaml"
+name: "Root Config"
+version: "1.0"
+description: "This is the root configuration file"

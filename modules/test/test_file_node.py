@@ -1,6 +1,5 @@
 """Test cases for file_node module"""
 
-import os
 import tempfile
 import unittest
 from pathlib import Path

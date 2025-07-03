@@ -1,35 +1,25 @@
 """Data-driven generator module for Jinja Template"""
 
-from enum import Enum
-from typing import Optional, List, Dict, Any, cast
+from typing import Dict, Any, List, Tuple
 from dataclasses import dataclass
 from . import (
     GeneratorError,
     GeneratorErrorType,
     DataHandler,
     TemplateHandler,
-    validate_data_handler,
-    validate_template_handler,
     validate_data_context,
-    validate_render_result
+    validate_render_result,
 )
-from ..jinja.jinja_handler import JinjaTemplateHandler
-from ..yaml.yaml_handler import YamlDataTreeHandler
-
-class DataType(Enum):
-    """Enum for data types"""
-    YAML = "yaml"
-
-class TemplateType(Enum):
-    """Enum for template types"""
-    JINJA = "jinja"
+from .handler_factory import HandlerFactory
+from .types import DataHandlerType, TemplateHandlerType
+from ..node.data_node import DataNode
 
 @dataclass
 class DataDrivenGeneratorConfig:
     """Configuration for the DataDrivenGenerator"""
-    data_type: DataType
+    data_type: DataHandlerType
     data_config: Dict[str, Any]
-    template_type: TemplateType
+    template_type: TemplateHandlerType
     template_config: Dict[str, Any]
 
 class DataDrivenGenerator:
@@ -39,85 +29,99 @@ class DataDrivenGenerator:
 
     def __init__(self, config: DataDrivenGeneratorConfig) -> None:
         """Initialize the generator with configuration
-
-        Note on typing:
-        self.data_handler and self.template_handler are initialized as None
-        but will be set to proper handlers in data_init and template_init.
-        The type hints Optional[DataHandler] and Optional[TemplateHandler] tell
-        Python these variables can be None or their respective handler types.
-        """
-        self.data_handler: Optional[DataHandler] = None
-        self.template_handler: Optional[TemplateHandler] = None
-        self.config = config
-        self.data_init(config.data_type, config.data_config)
-        self.template_init(config.template_type, config.template_config)
-
-    def data_init(self, data_type: DataType, data_config: Dict[str, Any]) -> None:
-        """Initialize the data based on the data type."""
-        data_init_handler = getattr(self, f"{data_type.value}_data_init", None)
-        if data_init_handler and callable(data_init_handler):
-            data_init_handler(data_config)
-        else:
-            raise GeneratorError(
-                GeneratorErrorType.DATA_INIT_ERROR,
-                f"Data initialization for {data_type.value} is not implemented."
-            )
-
-    def yaml_data_init(self, data_config: Dict[str, Any]) -> None:
-        """Initialize the YAML data handler"""
-        self.data_handler = cast(DataHandler, YamlDataTreeHandler(data_config))
-        validate_data_handler(self.data_handler)
-
-    def template_init(self, template_type: TemplateType, template_config: Dict[str, Any]) -> None:
-        """Initialize the template based on the template type."""
-        template_init_handler = getattr(self, f"{template_type.value}_template_init", None)
-        if template_init_handler and callable(template_init_handler):
-            template_init_handler(template_config)
-        else:
-            raise GeneratorError(
-                GeneratorErrorType.TEMPLATE_INIT_ERROR,
-                f"Template initialization for {template_type.value} is not implemented."
-            )
-
-    def jinja_template_init(self, template_config: Dict[str, Any]) -> None:
-        """Initialize the Jinja template handler"""
-        self.template_handler = JinjaTemplateHandler(template_config)
-        validate_template_handler(self.template_handler)
-
-    def render(self) -> str:
-        """Render the template with the data.
         
-        Note on isinstance checks:
-        Even though data_handler and template_handler are initialized in __init__,
-        Python's type checker needs runtime checks to verify they are the correct types
-        and not None. This is because:
-        1. The handlers are declared as Optional[Type], meaning they could be None
-        2. Python's type system is static at compile time but dynamic at runtime
-        3. Without these checks, we can't guarantee the type safety of method calls
+        Args:
+            config: Configuration for data and template handlers
         """
-        # Runtime type checks required for type safety
-        if not isinstance(self.data_handler, DataHandler):
+        self.data_handler = HandlerFactory.create_data_handler(
+            config.data_type, config.data_config
+        )
+        self.template_handler = HandlerFactory.create_template_handler(
+            config.template_type, config.template_config
+        )
+        # 存储渲染结果的映射
+        self._rendered_contents: Dict[DataNode, str] = {}
+
+    def render(self, pattern: str) -> Dict[str, str]:
+        """渲染模板并返回结果
+        
+        Args:
+            pattern: 用于查找数据文件的模式，如 "root.yaml"
+            
+        Returns:
+            Dict[str, str]: 文件名到渲染结果的映射
+            
+        Raises:
+            GeneratorError: 如果数据验证或渲染失败
+        """
+        # 清空之前的渲染结果
+        self._rendered_contents.clear()
+        results = {}
+        
+        # 1. 创建数据树
+        trees = self.data_handler.create_data_tree(pattern)
+        if not trees:
             raise GeneratorError(
                 GeneratorErrorType.DATA_INIT_ERROR,
-                "Data handler not properly initialized"
+                f"No data files found matching pattern: {pattern}",
             )
-        if not isinstance(self.template_handler, TemplateHandler):
+            
+        # 2. 对每个树进行后序遍历和渲染
+        for tree in trees:
+            self._process_node(tree)
+            key = f"{tree.name}"
+            results[key] = self._rendered_contents[tree]
+            
+        if not results:
             raise GeneratorError(
-                GeneratorErrorType.TEMPLATE_INIT_ERROR,
-                "Template handler not properly initialized"
+                GeneratorErrorType.RENDER_ERROR,
+                "No templates were rendered"
             )
+            
+        return results
 
-        result: Optional[str] = ""
-
-        for data_context in self.data_handler.get_data():
-            # Validate the data context
-            validate_data_context(data_context, self.data_handler.preserved_template_key)
-
-            # Get the template path from the data context
-            template_path: str = data_context.get(self.data_handler.preserved_template_key, "")
-
-            # Render the template using the template handler
-            result = self.template_handler.render_template(template_path, data_context)
+    def _process_node(self, node: DataNode) -> None:
+        """处理单个节点及其子节点
+        
+        采用后序遍历（先处理子节点再处理父节点）
+        
+        Args:
+            node: 要处理的数据节点
+        """
+        # 1. 先处理所有子节点
+        for child in node.children:
+            if isinstance(child, DataNode):
+                self._process_node(child)
+                
+        # 2. 验证数据
+        validate_data_context(node.data, self.data_handler.preserved_template_key)
+        
+        # 3. 准备渲染上下文
+        context = node.data
+        
+        # 4. 收集子节点渲染结果
+        children_content: List[str] = []
+        for child in node.children:
+            if isinstance(child, DataNode) and child in self._rendered_contents:
+                children_content.append(self._rendered_contents[child])
+        
+        # 5. 添加子节点内容到上下文
+        context[self.template_handler.config.preserved_children_key] = "\n".join(children_content)
+        
+        try:
+            # 6. 渲染模板
+            template_path = node.data[self.data_handler.preserved_template_key]
+            result = self.template_handler.render_template(
+                template_path,
+                context
+            )
+            
+            # 7. 验证结果并保存
             validate_render_result(result, template_path)
-
-        return str(result)
+            self._rendered_contents[node] = result
+            
+        except Exception as e:
+            raise GeneratorError(
+                GeneratorErrorType.RENDER_ERROR,
+                f"Failed to render {template_path}: {str(e)}"
+            )

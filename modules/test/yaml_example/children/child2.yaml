@@ -1,0 +1,6 @@
+TEMPLATE_PATH: "templates/child2.tmpl"
+CHILDREN_PATH: []
+name: "Child 2"
+type: "database"
+host: "localhost"
+port: 5432

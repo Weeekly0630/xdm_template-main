@@ -1,0 +1,6 @@
+TEMPLATE_PATH: "templates/child1.tmpl"
+CHILDREN_PATH: 
+name: "Child 1"
+type: "service"
+port: 8080
+enabled: true

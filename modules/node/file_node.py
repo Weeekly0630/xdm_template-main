@@ -10,6 +10,8 @@ from fnmatch import fnmatch
 from pathlib import Path
 import os
 
+T = TypeVar("T", bound="BaseNode")
+
 
 class FileType(Enum):
     FILE = "file"
@@ -31,11 +33,11 @@ class FilePathResolver:
         return path
 
 
-class BaseNode:
+class BaseNode(Generic[T]):
     """节点基类，包含文件和目录共同的属性和方法"""
 
     def __init__(
-        self, name: str, node_type: FileType, parent: Optional["BaseNode"] = None
+        self, name: str, node_type: FileType, parent: Optional[T] = None
     ):
         self.name = name
         self.type = node_type
@@ -82,13 +84,13 @@ class BaseNode:
         return up_path or down_path or "."
 
 
-class FileNode(BaseNode):
+class FileNode(BaseNode[T]):
     """文件节点"""
 
-    def __init__(self, file_name: str, parent: Optional["DirectoryNode"] = None):
+    def __init__(self, file_name: str, parent: Optional["DirectoryNode[T]"] = None):
         super().__init__(file_name, FileType.FILE, parent)
 
-    def move_to_directory(self, directory: "DirectoryNode") -> None:
+    def move_to_directory(self, directory: "DirectoryNode[T]") -> None:
         """将文件移动到指定目录"""
         if not isinstance(directory, DirectoryNode):
             raise TypeError("Expected a DirectoryNode instance.")
@@ -102,33 +104,33 @@ class FileNode(BaseNode):
         directory.add_child(self)
 
 
-class DirectoryNode(BaseNode):
+class DirectoryNode(BaseNode[T]):
     """目录节点"""
 
-    def __init__(self, dir_name: str, parent: Optional["DirectoryNode"] = None):
+    def __init__(self, dir_name: str, parent: Optional["DirectoryNode[T]"] = None):
         super().__init__(dir_name, FileType.DIRECTORY, parent)
-        self.children: List[Union[FileNode, "DirectoryNode"]] = []
+        self.children: List[Union[FileNode[T], "DirectoryNode[T]"]] = []
 
-    def add_child(self, node: Union[FileNode, "DirectoryNode"]) -> None:
+    def add_child(self, node: Union[FileNode[T], "DirectoryNode[T]"]) -> None:
         """添加子节点"""
         node.parent = self
         self.children.append(node)
 
-    def create_file(self, file_name: str) -> FileNode:
+    def create_file(self, file_name: str) -> "FileNode[T]":
         """创建文件节点"""
-        file_node = FileNode(file_name, self)
+        file_node = FileNode[T](file_name, self)
         self.add_child(file_node)
         return file_node
 
-    def create_directory(self, dir_name: str) -> "DirectoryNode":
+    def create_directory(self, dir_name: str) -> "DirectoryNode[T]":
         """创建子目录节点"""
-        dir_node = DirectoryNode(dir_name, self)
+        dir_node = DirectoryNode[T](dir_name, self)
         self.add_child(dir_node)
         return dir_node
 
     def build_tree(
         self, tree_path: str, patterns: Optional[Union[str, List[str]]] = None
-    ) -> "DirectoryNode":
+    ) -> "DirectoryNode[T]":
         """构建目录树"""
         if isinstance(patterns, str):
             patterns = [patterns]
@@ -169,9 +171,9 @@ class DirectoryNode(BaseNode):
         # self.name = str(root_path.resolve())
         return self
 
-    def _get_all_nodes(self) -> List[BaseNode]:
+    def _get_all_nodes(self) -> List[Union[FileNode[T], "DirectoryNode[T]"]]:
         """获取当前目录及其子目录下的所有节点"""
-        result = [cast(BaseNode, self)]
+        result = [cast(DirectoryNode[T], self)]
         if not isinstance(self, DirectoryNode):
             pass
         else:
@@ -179,7 +181,7 @@ class DirectoryNode(BaseNode):
                 if isinstance(child, DirectoryNode):
                     result.extend(child._get_all_nodes())
                 else:
-                    result.append(child)
+                    result.append(cast(FileNode[T], child))
         return result
 
     # def _get_relative_paths(
@@ -206,7 +208,7 @@ class DirectoryNode(BaseNode):
 
     #     return result
 
-    def find_nodes_by_path(self, path_pattern: str) -> List[BaseNode]:
+    def find_nodes_by_path(self, path_pattern: str) -> List[Union[FileNode[T], "DirectoryNode[T]"]]:
         """
         通过路径模式查找节点，支持通配符和路径导航
 
@@ -220,7 +222,7 @@ class DirectoryNode(BaseNode):
         Returns:
             匹配的节点列表
         """
-        result: List[BaseNode] = []
+        result: List[Union[FileNode[T], "DirectoryNode[T]"]] = []
         # 如果路径模式为空，直接返回空列表
         if path_pattern == "":
             return result
@@ -237,7 +239,7 @@ class DirectoryNode(BaseNode):
             root = self
             while root.parent:
                 root = root.parent
-            base_directories = [cast(DirectoryNode, root)]
+            base_directories = [cast(DirectoryNode[T], root)]
             parts = parts[1:]  # 跳过空的第一个元素
             last_index = len(parts) - 1
 
@@ -255,7 +257,7 @@ class DirectoryNode(BaseNode):
                     if base_dir.parent:
                         if index == last_index:  # 如果是最后一个部分，添加到结果
                             result.append(base_dir.parent)
-                        next_directories.append(cast(DirectoryNode, base_dir.parent))
+                        next_directories.append(cast(DirectoryNode[T], base_dir.parent))
 
                 elif part == "**":
                     # 收集所有子节点用于继续搜索
@@ -370,15 +372,15 @@ class DirectoryNode(BaseNode):
     #     return current_nodes
 
     # 为了保持兼容性，保留原有方法但使用新的实现
-    def find_files(self, pattern: str) -> List[FileNode]:
+    def find_files(self, pattern: str) -> List[FileNode[T]]:
         """查找匹配指定模式的文件"""
         nodes = self.find_nodes_by_path(pattern)
-        return [cast(FileNode, node) for node in nodes if isinstance(node, FileNode)]
+        return [cast(FileNode[T], node) for node in nodes if isinstance(node, FileNode)]
 
-    def get_node_by_path(self, path: str) -> Optional[Union[FileNode, "DirectoryNode"]]:
+    def get_node_by_path(self, path: str) -> Optional[Union[FileNode[T], "DirectoryNode[T]"]]:
         """通过路径获取节点（保留用于向后兼容）"""
         nodes = [
-            cast(Optional[Union[FileNode, "DirectoryNode"]], node)
+            cast(Union[FileNode[T], "DirectoryNode[T]"], node)
             for node in self.find_nodes_by_path(path)
         ]
         return nodes[0] if nodes else None

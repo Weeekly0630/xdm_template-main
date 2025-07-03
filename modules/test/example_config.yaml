@@ -1,0 +1,19 @@
+# 数据处理器配置
+data_type: yaml
+data_config:
+  root_path: test_data/config
+  file_pattern: ["*.yaml"]
+
+# 模板处理器配置
+template_type: jinja
+template_config:
+  template_dir: test_data/templates
+  # preserved_children_key:
+  autoescape: false
+
+# 要处理的文件模式
+patterns:
+  - "*.yaml"
+
+# 输出目录
+output_dir: test_data/output
